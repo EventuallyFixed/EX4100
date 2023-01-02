@@ -14,7 +14,7 @@ If it's not there, it untars the file to that area
 Assumptions
 -----------
 - ssh access to the WD NAS.
-- Knowledge of Docker.
+- Knowledge of Docker, and of Docker Networks.
 - Experience of Home Assistant, and specifically how to add scripts, and automations.
 - Knowledge of the mechanics of ssh key exchange, and a working key pair.
 
@@ -41,6 +41,25 @@ Download Home Assistant
 - ssh into the NAS
 - Issue command: docker pull homeassistant/home-assistant:latest
 - After a lot of time, when downloaded and expanded, issue the following command to start Home Assistant
+
+Optional: Create a Docker Network
+---------------------------------
+Not needed if using the SQLITE database.
+Allows the use of a private instance of MariaDB with Home Assistant, which avoids clashes of port number with the default WD install.
+To avoid that clash, this step will create a private network to allow communication with MariaDB from the Home Assistant container
+# docker network create -d bridge <network_name>
+
+Optional: Install MariaDB
+-------------------------
+Not needed if using the SQLITE database.
+Install a MariaDB docker image.  See: https://hub.docker.com/r/linuxserver/mariadb, which worked for me (in 2022) in the WD NAS.
+Create a container.  Add e.g. a '--ip 72.20.10.30' specifier in the 'docker run -d...' command
+Caveats: See the Notes: section below.
+
+Start Home Assistant
+--------------------
+Create a Home Assistant container
+'--net network_name' is not needed if the SQLITE database is being used, rather than a MariaDB instance.
 
 docker run -d \
   --net network_name \
